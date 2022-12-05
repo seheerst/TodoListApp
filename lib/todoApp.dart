@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todolist_app/Widgets/title_widget.dart';
 import 'package:todolist_app/Widgets/todoListItem_widget.dart';
 import 'package:todolist_app/Widgets/toolbar_widget.dart';
 import 'package:todolist_app/models/todo_model.dart';
+import 'package:todolist_app/providers/all_providers.dart';
 import 'package:uuid/uuid.dart';
 
-class TodoApp extends StatelessWidget {
-
+class TodoApp extends ConsumerWidget {
   TodoApp({Key? key}) : super(key: key);
 
   final newTodoController = TextEditingController();
 
-  List<TodoModel> allTodos = [
-    TodoModel(id: Uuid().v4(), description: 'Spora Git'),
-    TodoModel(id: Uuid().v4(), description: 'Alışveriş yap'),
-    TodoModel(id: Uuid().v4(), description: 'Anneni ara'),
-  ];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var allTodos = ref.watch(todoListProvider);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
@@ -29,12 +26,23 @@ class TodoApp extends StatelessWidget {
               controller: newTodoController,
               decoration:
                   const InputDecoration(labelText: 'Neler Yapacaksın Bugün ?'),
-              onSubmitted: (newTodo) {},
+              onSubmitted: (newTodo) {
+                ref.read(todoListProvider.notifier).addTodo(newTodo);
+              },
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             const ToolbarWidget(),
-            for(var i =0; i< allTodos.length;i++)
-              Dismissible(key:ValueKey(allTodos[i].id),child: TodoListItemWidget(item: allTodos[i],))
+            for (var i = 0; i < allTodos.length; i++)
+              Dismissible(
+                onDismissed: (_){
+                  ref.read(todoListProvider.notifier).remove(allTodos[i]);
+                },
+                  key: ValueKey(allTodos[i].id),
+                  child: TodoListItemWidget(
+                    item: allTodos[i],
+                  ))
           ],
         ),
       ),
