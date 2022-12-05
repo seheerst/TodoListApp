@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todolist_app/providers/all_providers.dart';
 
-class ToolbarWidget extends StatelessWidget {
+class ToolbarWidget extends ConsumerWidget {
   const ToolbarWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Row(
       children: [
-       const Expanded(child: Text('4 Etkinliğiniz var')),
+        Expanded(child: Text(ref.watch(todoListProvider).length.toString() + ' Etkinliğiniz var')),
         Tooltip(
           message: 'Tüm Etkinlikler',
           child: TextButton(onPressed: (){}, child: Text('All'),),
