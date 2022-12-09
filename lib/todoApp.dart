@@ -40,8 +40,11 @@ class TodoApp extends ConsumerWidget {
                   ref.read(todoListProvider.notifier).remove(allTodos[i]);
                 },
                   key: ValueKey(allTodos[i].id),
-                  child: TodoListItemWidget(
-                    item: allTodos[i],
+                  child: ProviderScope(
+                    overrides: [currentTodoProvider.overrideWithValue(allTodos[i])],
+                    child: TodoListItemWidget(
+
+                    ),
                   ))
           ],
         ),
