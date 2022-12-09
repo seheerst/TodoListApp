@@ -8,10 +8,7 @@ class ToolbarWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    int onComplatedTodoCount = ref
-        .watch(todoListProvider)
-        .where((element) => !element.complated)
-        .length;
+   final onComplatedTodoCount = ref.watch(unComplatedTodoCount);
     return Row(
       children: [
         Expanded(
