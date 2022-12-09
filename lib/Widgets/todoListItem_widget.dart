@@ -6,8 +6,8 @@ import 'package:uuid/uuid.dart';
 import '../models/todo_model.dart';
 
 class TodoListItemWidget extends ConsumerStatefulWidget {
-  TodoModel item;
-  TodoListItemWidget({Key? key, required this.item}) : super(key: key);
+
+  TodoListItemWidget({Key? key}) : super(key: key);
 
   @override
   _TodoListItemWidgetState createState() => _TodoListItemWidgetState();
@@ -17,6 +17,7 @@ class _TodoListItemWidgetState extends ConsumerState<TodoListItemWidget> {
   late FocusNode _textFocusNode;
   late TextEditingController _textController;
   bool _hasFocus = false;
+
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _TodoListItemWidgetState extends ConsumerState<TodoListItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTodo = ref.watch(currentTodoProvider);
     return Focus(
       onFocusChange: (isFocused) {
         if (!isFocused) {
@@ -51,12 +53,12 @@ class _TodoListItemWidgetState extends ConsumerState<TodoListItemWidget> {
             _hasFocus = true;
           });
           _textFocusNode.requestFocus();
-          _textController.text = widget.item.description;
+          _textController.text = currentTodo.description;
         },
         leading: Checkbox(
-          value: widget.item.complated,
+          value:currentTodo.complated,
           onChanged: (value) {
-            ref.read(todoListProvider.notifier).toggle(widget.item.id);
+            ref.read(todoListProvider.notifier).toggle(currentTodo.id);
           },
         ),
         title: _hasFocus
@@ -64,7 +66,7 @@ class _TodoListItemWidgetState extends ConsumerState<TodoListItemWidget> {
                 focusNode: _textFocusNode,
                 controller: _textController,
               )
-            : Text(widget.item.description),
+            : Text(currentTodo.description),
       ),
     );
   }
