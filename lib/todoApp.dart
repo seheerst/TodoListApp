@@ -14,7 +14,7 @@ class TodoApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var allTodos = ref.watch(todoListProvider);
+    var allTodos = ref.watch(filteredTodoList);
 
     return Scaffold(
       body: Padding(
@@ -33,18 +33,21 @@ class TodoApp extends ConsumerWidget {
             const SizedBox(
               height: 20,
             ),
-            const ToolbarWidget(),
+            ToolbarWidget(),
+            allTodos.length == 0
+                ? Center(child: Text('Herhangi bir etkinlik yok'))
+                : SizedBox(),
             for (var i = 0; i < allTodos.length; i++)
               Dismissible(
-                onDismissed: (_){
-                  ref.read(todoListProvider.notifier).remove(allTodos[i]);
-                },
+                  onDismissed: (_) {
+                    ref.read(todoListProvider.notifier).remove(allTodos[i]);
+                  },
                   key: ValueKey(allTodos[i].id),
                   child: ProviderScope(
-                    overrides: [currentTodoProvider.overrideWithValue(allTodos[i])],
-                    child: TodoListItemWidget(
-
-                    ),
+                    overrides: [
+                      currentTodoProvider.overrideWithValue(allTodos[i])
+                    ],
+                    child: TodoListItemWidget(),
                   ))
           ],
         ),

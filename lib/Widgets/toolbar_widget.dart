@@ -4,11 +4,17 @@ import 'package:todolist_app/providers/all_providers.dart';
 import 'package:todolist_app/providers/todo_list_manager.dart';
 
 class ToolbarWidget extends ConsumerWidget {
-  const ToolbarWidget({Key? key}) : super(key: key);
+  ToolbarWidget({Key? key}) : super(key: key);
+  var _currentfilter = TodoListFilter.all;
+
+  Color changeTextColor(TodoListFilter filt) {
+    return _currentfilter == filt ? Colors.green : Colors.black;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   final onComplatedTodoCount = ref.watch(unComplatedTodoCount);
+    final onComplatedTodoCount = ref.watch(unComplatedTodoCount);
+    _currentfilter = ref.watch(todoListFilter);
     return Row(
       children: [
         Expanded(
@@ -21,21 +27,36 @@ class ToolbarWidget extends ConsumerWidget {
         Tooltip(
           message: 'Tüm Etkinlikler',
           child: TextButton(
-            onPressed: () {},
-            child: Text('All'),
+            style: TextButton.styleFrom(
+                primary: changeTextColor(TodoListFilter.all)),
+            onPressed: () {
+              ref.read(todoListFilter.notifier).state = TodoListFilter.all;
+            },
+            child: Text('Tümü'),
           ),
         ),
         Tooltip(
           message: 'Tamamlanmamış',
           child: TextButton(
-            onPressed: () {},
-            child: Text('Aktif'),
+            style: TextButton.styleFrom(
+                primary: changeTextColor(TodoListFilter.active)),
+            onPressed: () {
+              ref.read(todoListFilter.notifier).state = TodoListFilter.active;
+            },
+            child: Text(
+              'Aktif',
+            ),
           ),
         ),
         Tooltip(
           message: 'Tamamlanmış',
           child: TextButton(
-            onPressed: () {},
+            style: TextButton.styleFrom(
+                primary: changeTextColor(TodoListFilter.complated)),
+            onPressed: () {
+              ref.read(todoListFilter.notifier).state =
+                  TodoListFilter.complated;
+            },
             child: Text('Tamamlanmış'),
           ),
         )
