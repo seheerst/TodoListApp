@@ -11,3 +11,13 @@ final todoListProvider = StateNotifierProvider<TodoListManager,List<TodoModel>>(
     TodoModel(id: Uuid().v4(), description: 'Ders çalış'),
   ]);
 });
+
+final unComplatedTodoCount = Provider<int>((ref){
+  final allTodo = ref.watch(todoListProvider);
+  final count = allTodo.where((element) => !element.complated).length;
+  return count;
+
+});
+final currentTodoProvider = Provider<TodoModel>((ref){
+  throw UnimplementedError();
+});
