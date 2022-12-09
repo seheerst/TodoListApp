@@ -43,4 +43,8 @@ class TodoListManager extends StateNotifier<List<TodoModel>> {
   void remove(TodoModel silinecekTodo) {
     state = state.where((element) => element.id != silinecekTodo.id).toList();
   }
+
+int onComplatedTodoCount(){
+    return state.where((element) => !element.complated).length;
+}
 }
